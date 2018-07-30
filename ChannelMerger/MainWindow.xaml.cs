@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using ImageMagick;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Button = System.Windows.Controls.Button;
+using ComboBox = System.Windows.Controls.ComboBox;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 
@@ -32,6 +38,7 @@ namespace ChannelMerger
         private async void ChannelBtn_Click(object sender, RoutedEventArgs e)
         {
             string tag = ((Button) sender).Tag.ToString();
+            ImageSource imageSource = null;
 
             OpenFileDialog file = new OpenFileDialog
             {
@@ -47,7 +54,8 @@ namespace ChannelMerger
                     await this.ShowMessageAsync("Error!", "This image isn't grayscale!");
                     return;
                 }
-
+                
+                imageSource = new BitmapImage(new Uri(file.FileName));
             }
 
             switch (tag.ToLower())
@@ -55,21 +63,29 @@ namespace ChannelMerger
                 case "r":
                     _channelPaths[0] = file.FileName;
                     redPath.Text = file.FileName;
+                    if (imageSource != null)
+                        RedImage.Source = imageSource;
                     break;
 
                 case "g":
                     _channelPaths[1] = file.FileName;
                     greenPath.Text = file.FileName;
+                    if (imageSource != null)
+                        GreenImage.Source = imageSource;
                     break;
 
                 case "b":
                     _channelPaths[2] = file.FileName;
                     bluePath.Text = file.FileName;
+                    if (imageSource != null)
+                        BlueImage.Source = imageSource;
                     break;
 
                 case "a":
                     _channelPaths[3] = file.FileName;
                     alphaPath.Text = file.FileName;
+                    if (imageSource != null)
+                        AlphaImage.Source = imageSource;
                     break;
 
                 default:
@@ -81,11 +97,18 @@ namespace ChannelMerger
         {
             if (String.IsNullOrEmpty(_outputPath)) return;
 
-            foreach (string path in _channelPaths)
+            string[] colours = {
+                RedFill.Text.ToLower(),
+                GreenFill.Text.ToLower(),
+                BlueFill.Text.ToLower(),
+                AlphaFill.Text.ToLower()
+            };
+
+            for (int i = 0; i < _channelPaths.Length; i++)
             {
-                _channelImages.Add(String.IsNullOrEmpty(path)
-                    ? new MagickImage("xc:white", _settings)
-                    : new MagickImage(path));
+                _channelImages.Add(String.IsNullOrEmpty(_channelPaths[i])
+                    ? new MagickImage("xc:"+colours[i], _settings)
+                    : new MagickImage(_channelPaths[i]));
             }
 
             _channelImages.MergeChannels(outputPath.Text, fileName.Text);
@@ -104,6 +127,33 @@ namespace ChannelMerger
                 _outputPath = folder.SelectedPath;
             }
             outputPath.Text = _outputPath;
+        }
+
+        private void ResolutionList_OnSelected(object sender, EventArgs eventArgs)
+        {
+            string[] sDimensions = ResolutionList.Text.Split('x');
+            int[] dimensions =
+            {
+                Int32.Parse(sDimensions[0]),
+                Int32.Parse(sDimensions[1])
+            };
+
+            _settings.Width  = dimensions[0];
+            _settings.Height = dimensions[1];
+        }
+
+        private void FillSelection_FocusLost(object sender, RoutedEventArgs e)
+        {
+            Title = ((ComboBox) sender).Name + ((ComboBox) sender).Text;
+        }
+
+        private void Preview_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (((Image) sender).Source != null)
+            {
+                PreviewWindow.IsOpen = true;
+                PreviewWindowImage.Source = ((Image) sender).Source;
+            }
         }
     }
 }

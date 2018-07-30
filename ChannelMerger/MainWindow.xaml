@@ -3,14 +3,26 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                      Title="MainWindow"
-                      Height="350"
-                      Width="525">
+                      xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
+                      Title="Channel Merger"
+                      Height="350" Width="600"
+                      MinHeight="350" MinWidth="530">
+    
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands>
+            <Button>
+                <iconPacks:PackIconMaterial Kind="Layers" />
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
+
+    <Grid>
     <Grid Margin="16" Background="White">
         <Grid.Effect>
             <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="10"/>
         </Grid.Effect>
         <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
@@ -23,9 +35,23 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="90"/>
             <ColumnDefinition/>
+            <ColumnDefinition Width="84"/>
+            <ColumnDefinition Width="40"/>
         </Grid.ColumnDefinitions>
         
-        <Button Name="redBtn" Tag="r" Grid.Row="0" Grid.Column="0" Margin="4" Click="ChannelBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="10">RESOLUTION</TextBlock>
+        <ComboBox Name="ResolutionList" LostFocus="ResolutionList_OnSelected" IsEditable="True" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="6" ToolTip="Select predefined resolution or enter your own">
+            <ComboBoxItem>64x64</ComboBoxItem>
+            <ComboBoxItem>128x128</ComboBoxItem>
+            <ComboBoxItem>256x256</ComboBoxItem>
+            <ComboBoxItem>512x512</ComboBoxItem>
+            <ComboBoxItem>1024x1024</ComboBoxItem>
+            <ComboBoxItem IsSelected="True">2048x2048</ComboBoxItem>
+            <ComboBoxItem>4096x4096</ComboBoxItem>
+            <ComboBoxItem>8192x8192</ComboBoxItem>
+        </ComboBox>
+        
+        <Button Name="redBtn" Tag="r" Grid.Row="1" Grid.Column="0" Margin="4" Click="ChannelBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
             <Grid Margin="8,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="16px"/>
@@ -36,7 +62,7 @@
             </Grid>
         </Button>
 
-        <Button Name="greenBtn" Tag="g" Grid.Row="1" Grid.Column="0" Margin="4" Click="ChannelBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+        <Button Name="greenBtn" Tag="g" Grid.Row="2" Grid.Column="0" Margin="4" Click="ChannelBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
             <Grid Margin="8,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="16px"/>
@@ -47,7 +73,7 @@
             </Grid>
         </Button>
 
-        <Button Name="blueBtn"  Tag="b" Grid.Row="2" Grid.Column="0" Margin="4" Click="ChannelBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+        <Button Name="blueBtn"  Tag="b" Grid.Row="3" Grid.Column="0" Margin="4" Click="ChannelBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
             <Grid Margin="8,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="16px"/>
@@ -58,7 +84,7 @@
             </Grid>
         </Button>
 
-        <Button Name="alphaBtn" Tag="a" Grid.Row="3" Grid.Column="0" Margin="4" Click="ChannelBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+        <Button Name="alphaBtn" Tag="a" Grid.Row="4" Grid.Column="0" Margin="4" Click="ChannelBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
             <Grid Margin="8,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="16px"/>
@@ -69,7 +95,7 @@
             </Grid>
         </Button>
 
-        <Button Name="outBtn" Tag="a" Grid.Row="5" Grid.Column="0" Margin="4" Click="OutputBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+        <Button Name="outBtn" Tag="a" Grid.Row="6" Grid.Column="0" Margin="4" Click="OutputBtn_Click" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
             <Grid Margin="8,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="16px"/>
@@ -80,22 +106,54 @@
             </Grid>
         </Button>
         
-        <TextBox Name="redPath"    IsReadOnly="True" Grid.Row="0" Grid.Column="1" Margin="4" VerticalContentAlignment="Center"></TextBox>
-        <TextBox Name="greenPath"  IsReadOnly="True" Grid.Row="1" Grid.Column="1" Margin="4" VerticalContentAlignment="Center"></TextBox>
-        <TextBox Name="bluePath"   IsReadOnly="True" Grid.Row="2" Grid.Column="1" Margin="4" VerticalContentAlignment="Center"></TextBox>
-        <TextBox Name="alphaPath"  IsReadOnly="True" Grid.Row="3" Grid.Column="1" Margin="4" VerticalContentAlignment="Center"></TextBox>
+        <TextBox Name="redPath"    IsReadOnly="True" Grid.Row="1" Grid.Column="1" Margin="4" VerticalContentAlignment="Center"></TextBox>
+        <TextBox Name="greenPath"  IsReadOnly="True" Grid.Row="2" Grid.Column="1" Margin="4" VerticalContentAlignment="Center"></TextBox>
+        <TextBox Name="bluePath"   IsReadOnly="True" Grid.Row="3" Grid.Column="1" Margin="4" VerticalContentAlignment="Center"></TextBox>
+        <TextBox Name="alphaPath"  IsReadOnly="True" Grid.Row="4" Grid.Column="1" Margin="4" VerticalContentAlignment="Center"></TextBox>
 
-        <Grid Grid.Row="5" Grid.Column="1">
+        <Grid Grid.Row="6" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TextBox Name="outputPath" IsReadOnly="True" Margin="4" VerticalContentAlignment="Center"></TextBox>
             <TextBox Name="fileName" Grid.Column="1" Margin="4" Text="result.png" VerticalContentAlignment="Center"></TextBox>
-
         </Grid>
         
-        <Button Name="mergeBtn" Grid.Row="6" Grid.Column="1" Margin="4" Click="MergeBtn_Click">Merge</Button>
+        <ComboBox Name="RedFill"   Grid.Column="2" Grid.Row="1" LostFocus="FillSelection_FocusLost" Margin="4" ToolTip="Select what colour will fill the channel if no image is selected">
+            <ComboBoxItem IsSelected="True">WHITE</ComboBoxItem>
+            <ComboBoxItem>BLACK</ComboBoxItem>
+        </ComboBox>
+        <ComboBox Name="GreenFill" Grid.Column="2" Grid.Row="2" LostFocus="FillSelection_FocusLost" Margin="4" ToolTip="Select what colour will fill the channel if no image is selected">
+            <ComboBoxItem IsSelected="True">WHITE</ComboBoxItem>
+            <ComboBoxItem>BLACK</ComboBoxItem>
+        </ComboBox>
+        <ComboBox Name="BlueFill"  Grid.Column="2" Grid.Row="3" LostFocus="FillSelection_FocusLost" Margin="4" ToolTip="Select what colour will fill the channel if no image is selected">
+            <ComboBoxItem IsSelected="True">WHITE</ComboBoxItem>
+            <ComboBoxItem>BLACK</ComboBoxItem>
+        </ComboBox>
+        <ComboBox Name="AlphaFill" Grid.Column="2" Grid.Row="4" LostFocus="FillSelection_FocusLost" Margin="4" ToolTip="Select what colour will fill the channel if no image is selected">
+            <ComboBoxItem IsSelected="True">WHITE</ComboBoxItem>
+            <ComboBoxItem>BLACK</ComboBoxItem>
+        </ComboBox>
         
+        <Image Name="RedImage"   Grid.Row="1" Grid.Column="3" Margin="4" MouseDown="Preview_Click" ToolTip="Click to preview the loaded image"></Image>
+        <Image Name="GreenImage" Grid.Row="2" Grid.Column="3" Margin="4" MouseDown="Preview_Click" ToolTip="Click to preview the loaded image"></Image>
+        <Image Name="BlueImage"  Grid.Row="3" Grid.Column="3" Margin="4" MouseDown="Preview_Click" ToolTip="Click to preview the loaded image"></Image>
+        <Image Name="AlphaImage" Grid.Row="4" Grid.Column="3" Margin="4" MouseDown="Preview_Click" ToolTip="Click to preview the loaded image"></Image>
+        
+        <Button Name="mergeBtn" Grid.Row="7" Grid.Column="1" Margin="4" Click="MergeBtn_Click">Merge</Button>
+        
+    </Grid>
+        
+        <simpleChildWindow:ChildWindow Name="PreviewWindow"
+                                       HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       ShowCloseButton="True"
+                                       Padding="8"
+                                       IsModal="True">
+            <Image Name="PreviewWindowImage"></Image>
+        </simpleChildWindow:ChildWindow>
+
     </Grid>
 </Controls:MetroWindow>
