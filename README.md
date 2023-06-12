@@ -17,7 +17,7 @@ ___
 
 - Select resolution of images you want to process, or enter your own
 - Load grayscale images into the channels you need
-- Select colour fill forchannels where no iamges will be loaded (or don't - default is white)
+- Select colour fill for channels where no images will be loaded (or don't - default is white)
 - Select an output folder
 - Enter file name and extension
 - Click ``MERGE``
